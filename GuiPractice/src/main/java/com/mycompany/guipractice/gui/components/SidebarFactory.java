@@ -4,6 +4,7 @@
  */
 package com.mycompany.guipractice.gui.components;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,11 +32,47 @@ public class SidebarFactory {
         panel.setPreferredSize(new Dimension(width, Integer.MAX_VALUE));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
         
-        addNavigationItem(panel, "DASHBoARD", "(●'◡'●)", onItemClicked);
-        addNavigationItem(panel, "PROfILE", "(*/ω＼*)", onItemClicked);
+        
         
         return panel;
     }
+    
+    public static JPanel createCollapseableSidebar(int expandedWidth, int collapsedWidth, Consumer<String> onItemClicked) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setPreferredSize(new Dimension(expandedWidth,Integer.MAX_VALUE));
+        panel.setBackground(DEFAULT_BG);
+        
+        JButton button = new JButton("📁");
+        button.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        
+        addNavigationItem(contentPanel, "DASHBOARD", "(●'◡'●)", onItemClicked);
+        addNavigationItem(contentPanel, "PROFILE", "(*/ω＼*)", onItemClicked);
+        addNavigationItem(contentPanel, "ABOUT", "(⌐■_■)", onItemClicked);
+        addNavigationItem(contentPanel, "SETTINGS", "ヾ(⌐■_■)ノ♪", onItemClicked);
+        addNavigationItem(contentPanel, "LOGOUT", "（＾∀＾●）ﾉｼ", onItemClicked);
+        
+        panel.add(button, BorderLayout.NORTH);
+        panel.add(contentPanel, BorderLayout.CENTER);
+        
+        button.addActionListener(e -> {
+           boolean isCollapsed = panel.getWidth() == collapsedWidth;
+           int newWidth = isCollapsed ? expandedWidth : collapsedWidth;
+           panel.setPreferredSize(new Dimension(newWidth, Integer.MAX_VALUE));
+           button.setText(isCollapsed ? "📂" : "📁");
+           contentPanel.setVisible(isCollapsed);
+           
+           panel.revalidate();
+           panel.repaint();
+        });
+        return panel;
+    }
+    
     private static void addNavigationItem(JPanel panel, String text, String icon, Consumer<String> onItemClicked) {
         JButton button = new JButton(text + " " + icon);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -66,4 +103,5 @@ public class SidebarFactory {
         panel.add(button);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
     }
+    
 }

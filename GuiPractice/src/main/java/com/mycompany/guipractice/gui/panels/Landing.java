@@ -33,7 +33,9 @@ public class Landing extends JPanel{
         contentPanel.add(new Profile(), "PROFILE");
         this.add(contentPanel, BorderLayout.CENTER);
         
-        JPanel sidebar = SidebarFactory.createNavigationSidebar(250, this::handleSidebarEvent);
+//        JPanel sidebar = SidebarFactory.createNavigationSidebar(250, this::handleSidebarEvent);
+                JPanel sidebar = SidebarFactory.createCollapseableSidebar(250, 50, this::handleSidebarEvent);
+        
         this.add(sidebar, BorderLayout.WEST);
         
         handleSidebarEvent("DASHBOARD");
